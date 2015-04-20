@@ -4,6 +4,6 @@ public interface WordFilter {
 	
 	public void insertToTree(String[] words);
 	
-	public void eliminateHittingWords(String text);
+	public String eliminateHittingWords(String text);
 
 }

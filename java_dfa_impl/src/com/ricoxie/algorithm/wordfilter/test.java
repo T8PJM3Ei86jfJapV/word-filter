@@ -2,10 +2,10 @@ package com.ricoxie.algorithm.wordfilter;
 
 public final class test {
 	public static void main(String[] args) {
-		TrieNode[] node = new TrieNode[100];
+		SimpleWordFilter swf = new SimpleWordFilter();
 		
-		if (node[0] == null) {
-			System.out.println(node[0]);
-		}
+		String [] words = {"45", "456", "8", "89", ""};
+		swf.insertToTree(words);
+		System.out.println(swf.eliminateHittingWords("456789"));
 	}
 }
