@@ -1,4 +1,4 @@
-package com.ricoxie.algorithm.wordfilter;
+package com.ricoxie.algorithm;
 
 public interface WordFilter {
 	

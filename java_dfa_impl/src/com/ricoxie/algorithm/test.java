@@ -1,4 +1,4 @@
-package com.ricoxie.algorithm.wordfilter;
+package com.ricoxie.algorithm;
 
 import java.io.UnsupportedEncodingException;
 
@@ -6,12 +6,12 @@ public final class test {
 	public static void main(String[] args) {
 		WordClassify obj = new WordClassify();
 	
-/*		String [] words = {"45", "456", "8", "89", "", "fuck", "ffuck"};
+		String [] words = {"45", "456", "8", "89", "", "fuck", "ffuck"};
 		obj.insertToTree(words);
 		obj.insertToTree("fuck", "sex");
 		obj.insertToTree("fuck", "sen");
 		System.out.println(obj.eliminateMatchingWords("fuckkkffffuck"));
-		System.out.println(obj.getCategory("fuck"));*/
+		System.out.println(obj.getCategory("fuck"));
 /*		
 		byte[] bs;
 		try {

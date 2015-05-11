@@ -1,4 +1,4 @@
-package com.ricoxie.algorithm.wordfilter;
+package com.ricoxie.algorithm;
 
 import java.io.UnsupportedEncodingException;
 
