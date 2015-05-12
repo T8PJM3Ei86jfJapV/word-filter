@@ -13,7 +13,9 @@ public class SimpleWordFilter implements WordFilterInterface {
 	
 	public void insertToTree(String word) {
 		
-		int len = word.length();
+		int array[] = string2intarray(word);
+		
+		int len = array.length;
 
 		// word length interval: [1, MAX_WORD_LENGTH]
 		if (len < 1) {
@@ -29,8 +31,7 @@ public class SimpleWordFilter implements WordFilterInterface {
 		TrieNode node = root;
 
 		for (int i = 0; i != len; ++i) {
-			char letter = word.charAt(i);
-			int order = (int) letter;
+			int order = array[i];
 
 			if (node.child[order] == null) {
 				node.child[order] = new TrieNode();
@@ -54,32 +55,36 @@ public class SimpleWordFilter implements WordFilterInterface {
 		}
 	}
 	
-	public String eliminateMatchingWords(String text, String substitute) {
+	public String eliminateMatchingWords(String text) {
 		TrieNode now = root;
 
 		// matchingLen: longest matching word length
 		// hittingLen: number of accumulated hitting characters
 		int matchingLen = 0, hittingLen = 0;
 		
-		int textLen = text.length();
-		int subLen = substitute.length();
+		int array[] = string2intarray(text);
+		int len = array.length;
 
-		for (int i = 0; i != textLen; ++i) {
+		for (int i = 0; i != len; ++i) {
 
-			int order = (int) text.charAt(i);
+			int order = array[i];
 			now = now.child[order];
 
 			if (now == null) {
 
 				if (matchingLen > 0) {
 					// matching success
-					int start = i - hittingLen + 1;
+					int start = i - hittingLen;
 					int end = start + matchingLen;
 
 					// eliminating substring between the interval of [start, end)
-					text = text.substring(0, start - 1) + substitute + text.substring(end - 1);
-					textLen = textLen - matchingLen + subLen;
-					i = i - matchingLen + subLen - 1;
+					for (int j = start; j != end; ++j) {
+						// "*".getBytes[0] + 128 = 170
+						array[j] = 170;
+						
+					}
+					i--;
+
 				} else {
 					// matching failed, rolling back
 					i -= hittingLen;
@@ -93,11 +98,13 @@ public class SimpleWordFilter implements WordFilterInterface {
 			if (now.isEnd) {
 				matchingLen = ++hittingLen;
 				
-				if (i == text.length() - 1) {
+				if (i == len - 1) {
 					// end of text, longest matching substring
-					text = text.substring(0, i - matchingLen + 1) + substitute;
-					textLen = textLen - matchingLen + subLen;
-					i = i - matchingLen + subLen - 1;
+					for (int j = len - matchingLen; j != len; ++j) {
+						// "*".getBytes[0] + 128 = 170
+						array[j] = 170;
+					}
+					i--;
 					break;
 				}
 			} else {
@@ -105,64 +112,61 @@ public class SimpleWordFilter implements WordFilterInterface {
 				// and shift to the next character
 			}
 		}
-		return text;
-	}
-	
-	public String eliminateMatchingWords(String text) {
-		return eliminateMatchingWords(text, "*");
+
+		return intarray2string(array);
 	}
 	
 	public int getMatchCount(String text) {
-		int num = 0;
+		int count = 0;
+		
+		int array[] = string2intarray(text);
+		int len = array.length;
+		
+		int hittingLen = 0;
+		boolean isMatched = false;
+		
 		TrieNode now = root;
 
-		// matchingLen: longest matching word length
-		// hittingLen: number of accumulated hitting characters
-		int matchingLen = 0, hittingLen = 0;
-		
-		int textLen = text.length();
+		for (int i = 0; i != len; ++i) {
 
-		for (int i = 0; i != textLen; ++i) {
-
-			int order = (int) text.charAt(i);
+			int order = array[i];
 			now = now.child[order];
 
 			if (now == null) {
 
-				if (matchingLen > 0) {
+				if (isMatched) {
 					// matching success
-					num++;
+					count++;
 				} else {
 					// matching failed, rolling back
 					i -= hittingLen;
 				}
 
-				matchingLen = hittingLen = 0;
+				isMatched = false;
+				hittingLen = 0;
 				now = root;
 				continue;
 			}
 			
+			hittingLen++;
+			
 			if (now.isEnd) {
-				matchingLen = ++hittingLen;
+				isMatched = true;
 				
-				if (i == text.length() - 1) {
+				if (i == len - 1) {
 					// end of text, longest matching substring
-					num++;
+					count++;
 					break;
 				}
-			} else {
-				++hittingLen;
-				// and shift to the next character
 			}
 		}
-		
-		return num;
+		return count;
 	}
 	
-	protected int[] string2ascii(String word) {
+	protected int[] string2intarray(String string) {
 		int array[] = null;
 		try {
-			byte[] bytes = word.getBytes("utf-8");
+			byte[] bytes = string.getBytes("utf-8");
 			array = new int[bytes.length];
 			for (int i = 0; i != bytes.length; ++i) {
 				array[i] = Integer.valueOf(bytes[i]) + 128;
@@ -173,18 +177,23 @@ public class SimpleWordFilter implements WordFilterInterface {
 		return array;
 	}
 	
-	protected void printTree(TrieNode start) {
-		TrieNode node = start;
-
-		for (int i = 0; i != 256; ++i) {
-			if (node.child[i] == null) {
-				continue;
-			}
-
-			if (node.child[i].isActive == true) {
-				System.out.println((char) i);
-				printTree(node.child[i]);
-			}
+	protected String intarray2string(int[] array) {
+		String outcome = null;
+		
+		int len = array.length;
+		
+		byte bytes[] = new byte[len];
+		
+		for (int i = 0; i != len; ++i) {
+			bytes[i] = (byte) (array[i] - 128);
 		}
+		
+		try {
+			outcome = new String(bytes, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return outcome;
 	}
 }

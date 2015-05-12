@@ -1,32 +1,23 @@
 package com.ricoxie.algorithm;
 
-import java.io.UnsupportedEncodingException;
-
 public final class test {
 	public static void main(String[] args) {
-		WordClassify obj = new WordClassify();
+		SimpleWordFilter obj = new SimpleWordFilter();
 	
-		String [] words = {"45", "456", "8", "89", "", "fuck", "ffuck"};
+		String [] words = {"中文", "456", "8", "89", "", "fuck", "ffuck"};
 		obj.insertToTree(words);
-		obj.insertToTree("fuck", "sex");
-		obj.insertToTree("fuck", "sen");
-		System.out.println(obj.eliminateMatchingWords("fuckkkffffuck"));
-		System.out.println(obj.getCategory("fuck"));
-/*		
-		byte[] bs;
-		try {
-			bs = "2".getBytes("utf-8");
-			for(byte b : bs)
-			    System.out.print(Integer.valueOf(b) + 128 + " ");
-				System.out.print((int) '2');
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		
+		String text = "中文中文f中文中文fuckffuk中文测试中文中文";
+		int array[] = obj.string2intarray(text);
+
+		for (int item : array) {
+			System.out.print(item + " ");
 		}
-		*/
-		String temp = "000000";
-		for (int index : obj.string2ascii(temp)) {
-			System.out.println(index);	
-		}
+		System.out.print("\n");
+		
+		String result = obj.eliminateMatchingWords(text);
+
+		System.out.println(result);
 	}
 }
