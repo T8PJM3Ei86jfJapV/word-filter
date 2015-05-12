@@ -2,7 +2,7 @@ package com.ricoxie.algorithm;
 
 import java.io.UnsupportedEncodingException;
 
-public class SimpleWordFilter implements WordFilterInterface {
+public class SimpleWordFilter implements WordFilter {
 	
 	protected final static int MAX_WORD_LENGTH = 24;
 	protected TrieNode root;
