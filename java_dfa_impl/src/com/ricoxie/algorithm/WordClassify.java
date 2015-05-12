@@ -7,7 +7,10 @@ public class WordClassify extends SimpleWordFilter {
 	}
 	
 	public void insertToTree(String word, String category) {
-		int len = word.length();
+		
+		int array[] = string2intarray(word);
+		
+		int len = array.length;
 
 		// word length interval: [1, MAX_WORD_LENGTH]
 		if (len < 1) {
@@ -23,8 +26,7 @@ public class WordClassify extends SimpleWordFilter {
 		TrieNode node = root;
 
 		for (int i = 0; i != len; ++i) {
-			char letter = word.charAt(i);
-			int order = (int) letter;
+			int order = array[i];
 
 			if (node.child[order] == null) {
 				node.child[order] = new TrieNode();
@@ -45,8 +47,10 @@ public class WordClassify extends SimpleWordFilter {
 	
 	public CategoryNode getCategory(String keyword) {
 		TrieNode now = root;
-		for (int i = 0; i != keyword.length(); ++i) {
-			int order = (int) keyword.charAt(i);
+		int array[] = string2intarray(keyword);
+
+		for (int i = 0; i != array.length; ++i) {
+			int order = array[i];
 			
 			now = now.child[order];
 			
